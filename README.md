@@ -236,7 +236,10 @@ scripts/
 ├── train_controllers.py   训练思考控制器
 ├── export_gguf.py         导出 GGUF 大脑权重包（含官方工具交叉验证）
 ├── check_interfaces.py    接口回归：HTTP 全端点 + MCP 全工具
-└── demo_governance.py     思考治理对比实验（Ollama 联调）
+├── demo_governance.py     思考治理对比实验（Ollama 联调）
+└── repo_guard.py          发布守卫：拦截本机私有内容进库
+
+.githooks/                 提交/推送前钩子（启用方式见「发布防护」）
 
 causal_graph.json          因果知识图（5.3 万节点 / 11.5 万边）
 backups/                   图重建前的历史备份
@@ -253,8 +256,26 @@ Ultron 推理协处理器
    └─ 内核      因果图 5.3 万节点 + 神经控制器（可导出 GGUF）
 ```
 
+## 发布防护
+
+本仓库带一道**本地守卫**，在内容离开本机前拦截三类风险：私有/可再生目录
+（`.workbuddy/`、`data/`、`backups/`）、密钥与大二进制（`.npz`/`.gguf`/`.pem`…，
+仅 `causal_graph.json` 与 `ultron/weights/*.npz` 白名单放行）、以及正文中的
+本机绝对路径、系统用户名、真实邮箱、访问令牌和私钥头。
+
+```bash
+git config core.hooksPath .githooks     # 一次性启用钩子（每个克隆都要做）
+python scripts/repo_guard.py --all      # 手工体检：全库已跟踪文件
+```
+
+钩子默认不随克隆自动生效——`core.hooksPath` 是本地配置。没启用时，
+`--all` 仍可随时做一次全库扫描。确需提交被拦内容（已人工核实）时，
+用 `ULTRON_GUARD_ALLOW=1 git commit ...` 临时放行。
+
 ## 环境变量
 
 | 变量 | 说明 |
 |------|------|
 | `HF_ENDPOINT` | 嵌入模型下载镜像（默认 `https://hf-mirror.com`） |
+| `ULTRON_GUARD_ALLOW` | 设为 `1` 时跳过 `repo_guard.py` 检查（已人工核实后使用） |
+| `GIT_SSL_NO_VERIFY` | 仅在企业 TLS 中间人代理环境下推送时需要设为 `true` |

@@ -1,0 +1,11 @@
+#!/bin/sh
+# 推送前守卫：在内容离开本机之前，再扫一遍所有待推送提交。
+# 这是最后一道关——即使绕过 pre-commit（--no-verify），这里仍会拦截。
+ROOT=$(git rev-parse --show-toplevel) || exit 1
+for PY in python3 python; do
+    if command -v "$PY" >/dev/null 2>&1; then
+        exec "$PY" "$ROOT/scripts/repo_guard.py" --push
+    fi
+done
+echo "[守卫] 未找到 Python 解释器，跳过检查（请手动运行 scripts/repo_guard.py）" >&2
+exit 0

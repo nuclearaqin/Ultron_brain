@@ -1,0 +1,11 @@
+#!/bin/sh
+# 提交前守卫：阻止本机私有内容（工作区状态、密钥、原始数据）进入仓库。
+# 规则见 scripts/repo_guard.py。临时放行：ULTRON_GUARD_ALLOW=1 git commit ...
+ROOT=$(git rev-parse --show-toplevel) || exit 1
+for PY in python3 python; do
+    if command -v "$PY" >/dev/null 2>&1; then
+        exec "$PY" "$ROOT/scripts/repo_guard.py" --staged
+    fi
+done
+echo "[守卫] 未找到 Python 解释器，跳过检查（请手动运行 scripts/repo_guard.py）" >&2
+exit 0
