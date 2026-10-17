@@ -1,0 +1,27 @@
+# Ultron —— 发布前忽略清单
+# 原则：**开箱即用的资产进库，可复现的体积产物不进库**。
+
+# ---- 大体积第三方数据（约 475MB，超 GitHub 100MB 硬限）----
+# ConceptNet 原始断言包：需要时用 scripts/rebuild_graph.py 从官方下载重建。
+data/
+
+# ---- 可复现的体积缓存 ----
+# {stem}.emb_dim{N}.npz 是按维度缓存的节点嵌入索引（384 维约 79MB）。
+# ⚠ dim128 那份是"语义模型不可用时的哈希降级"特征，不是语义向量，
+#   不要用它训练神经组件（见 README「神经组件的嵌入口径」）。
+*.emb_dim*.npz
+
+# GGUF 是构建产物：python scripts/export_gguf.py 几秒即可重生成，
+# 且导出脚本自带"与 ultron/weights/*.npz 是否同步"的自检。
+# 发布时请走 Release 附件 / CI 产物，不要提交二进制到版本库。
+*.gguf
+
+# ---- 本地历史 / 运行时 ----
+backups/
+.workbuddy/
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+ultron_selftest_tmp.json
+*.log

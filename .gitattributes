@@ -1,0 +1,10 @@
+# 统一换行与二进制识别。
+# 重点：ultron/weights/*.npz 等二进制文件若被当作文本处理（换行转换），
+# 权重会被破坏，故显式声明为 binary。
+* text=auto
+*.npz binary
+*.gz binary
+*.gguf binary
+*.png binary
+*.ico binary
+*.jpg binary
