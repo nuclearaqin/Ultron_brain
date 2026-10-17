@@ -8,3 +8,8 @@
 *.png binary
 *.ico binary
 *.jpg binary
+
+# 钩子脚本必须以 LF 落盘：shebang 后跟 \r 会变成 "bad interpreter"，
+# 在 Windows 克隆时也照此处理，否则钩子全部失效。
+.githooks/* text eol=lf
+*.sh        text eol=lf
