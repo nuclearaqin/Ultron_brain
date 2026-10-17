@@ -121,8 +121,10 @@ python scripts/export_gguf.py --train-link   # 产出 ultron_brain.gguf
   可被自有工具链（`ultron/gguf_io.py`）直接读回装配。
 * 也可以用官方 `gguf` 包交叉验证（可选）：`pip install gguf` 后重跑导出脚本。
 
-> **发布建议**：`ultron_brain.gguf` 是构建产物，几秒即可重生成，不要提交进版本库
-> （见 `.gitignore`），需要时挂 Release 附件。
+> **下载**：`ultron_brain.gguf` 已发布于
+> [Release v1.0.0](https://github.com/nuclearaqin/Ultron_brain/releases/download/v1.0.0/ultron_brain.gguf)
+> （929,248 字节，sha256 `2277f5d6a64e…4f02c`，GitHub 侧 digest 一致）。
+> 它是构建产物，不进版本库（见 `.gitignore`）；需要最新权重时本地重跑导出脚本即可。
 
 ### 神经组件的嵌入口径（重要）
 
